@@ -1,8 +1,9 @@
 'use client'
 import Image from "next/image";
 import Card from "@/components/Card"
-import {useState} from "react"
+import {useState, useEffect} from "react"
 import {useFetchData} from "@/app/hooks/useFetchData"
+import { Hash } from "crypto";
 
 export default function Home() {  
   const [location, setLocation] = useState("")
@@ -13,15 +14,33 @@ export default function Home() {
   const {data, loading, error} = useFetchData(url)
   const [weatherData, setWeatherData] = useState(data)
 
+  useEffect(() => {
+    setWeatherData(data)
+  }, [data])
+
+  const [cities, setCities] = useState({
+    cityList: [
+      weatherData
+    ]
+  });
+
+  const AddCityHandler = (weatherData: any) => {
+    setCities({
+      cityList: [
+        ...cities.cityList, weatherData
+      ]
+    })
+  }
+
 
   const searchLocation = (e: { key: string; })=>{
     if(e.key === "Enter"){
-      setWeatherData(data)
+      AddCityHandler(data)
       setLocation("")
     } 
   }
 
-
+  console.log(cities.cityList)
   return (
     <div className="w-full h-full relative">
       <div className="text-center p-6">
@@ -37,7 +56,16 @@ export default function Home() {
         onKeyDownCapture={searchLocation}
         />
       </div>
-      <Card weatherData = {weatherData} />
+
+      <div className="flex flex-wrap p-4 gap-4">
+        {cities.cityList.map((weatherData, index) => (
+          <Card 
+            key={index} 
+            weatherData={weatherData} 
+            onClose={() => RemoveCityHandler(index)}
+          />
+        ))}
+      </div>
 
     </div>
   );
