@@ -6,12 +6,13 @@ import {useFetchData} from "@/app/hooks/useFetchData"
 
 export default function Home() {  
   const [location, setLocation] = useState("")
-  const [weatherData, setWeatherData] = useState({})
-
 
   const API_KEY = "076d28c398562ec31bef41acfe863828"
-  const url =  `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=${API_KEY}`
+  const url =  `https://api.openweathermap.org/data/2.5/weather?q=${location}&units=metric&appid=${API_KEY}`
+  
   const {data, loading, error} = useFetchData(url)
+  const [weatherData, setWeatherData] = useState(data)
+
 
   const searchLocation = (e: { key: string; })=>{
     if(e.key === "Enter"){
@@ -36,7 +37,6 @@ export default function Home() {
         onKeyDownCapture={searchLocation}
         />
       </div>
-
       <Card weatherData = {weatherData} />
 
     </div>
