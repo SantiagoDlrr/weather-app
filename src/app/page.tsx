@@ -62,7 +62,6 @@ export default function Home() {
           <Card 
             key={index} 
             weatherData={weatherData} 
-            onClose={() => RemoveCityHandler(index)}
           />
         ))}
       </div>
